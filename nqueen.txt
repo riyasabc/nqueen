@@ -1,0 +1,66 @@
+int queenCombi(int boxes, int box, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = box; i <= boxes; i++)
+    {
+        count += queenCombi(boxes, i + 1, tnq, q + 1,
+                            ans + "b" + to_string(i) + "q" + to_string(q));
+    }
+
+    return count;
+}
+
+int queenPerm(int boxes, int isSet, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i <= boxes; i++)
+    {
+        int mask = (1 << i);
+        if ((isSet & mask) == 0)
+        {
+            isSet |= mask;
+            count += queenPerm(boxes, isSet, tnq, q + 1,
+                               ans + "b" + to_string(i) + "q" + to_string(q));
+            isSet &= (~mask);
+        }
+    }
+
+    return count;
+}
+
+int queenPerm_2D(vector<vector<bool>> &boxes, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+
+        if (!boxes[r][c])
+        {
+            boxes[r][c] = true;
+            count += queenPerm_2D(boxes, tnq, q + 1,
+                                  ans + "b" + to_string(i) + "q" + to_string(q) + " ");
+            boxes[r][c] = false;
+        }
+    }
+    return count;
+}
